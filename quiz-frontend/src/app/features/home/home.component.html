@@ -1,0 +1,139 @@
+<div class="home-container">
+
+  <!-- Backend offline banner -->
+  <div class="offline-banner" *ngIf="!isLoading && !backendOnline">
+    <mat-icon>warning</mat-icon>
+    <span>Cannot reach the backend. Make sure all microservices are running (start Service Registry first).</span>
+  </div>
+
+  <!-- ── Hero Section ─────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-content">
+      <mat-icon class="hero-icon">quiz</mat-icon>
+      <h1>Welcome to QuizApp</h1>
+      <p class="subtitle">Manage questions, create quizzes, and test your knowledge across microservices</p>
+      <div class="hero-actions">
+        <button mat-raised-button color="primary" routerLink="/quizzes/create">
+          <mat-icon>add_circle</mat-icon> Create a Quiz
+        </button>
+        <button mat-stroked-button color="accent" routerLink="/quizzes/take">
+          <mat-icon>play_arrow</mat-icon> Take a Quiz
+        </button>
+        <button mat-stroked-button routerLink="/questions/add">
+          <mat-icon>add</mat-icon> Add Question
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stats Cards ──────────────────────────────────────────────────────── -->
+  <section class="stats-grid">
+
+    <!-- Total Questions -->
+    <mat-card class="stat-card" matRipple (click)="navigateTo('/questions')">
+      <mat-card-content>
+        <div class="stat-icon questions">
+          <mat-icon>help_outline</mat-icon>
+        </div>
+        <div class="stat-body">
+          <p class="stat-label">Total Questions</p>
+          <p class="stat-value">{{ isLoading ? '...' : totalQuestions }}</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="primary" routerLink="/questions">Browse All</button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Categories -->
+    <mat-card class="stat-card" matRipple>
+      <mat-card-content>
+        <div class="stat-icon categories">
+          <mat-icon>category</mat-icon>
+        </div>
+        <div class="stat-body">
+          <p class="stat-label">Categories</p>
+          <p class="stat-value">{{ isLoading ? '...' : categories.length }}</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="chip-list">
+          <span *ngFor="let cat of categories.slice(0, 4)" class="category-badge">{{ cat }}</span>
+          <span *ngIf="categories.length > 4" class="category-badge more">+{{ categories.length - 4 }}</span>
+          <span *ngIf="!isLoading && categories.length === 0" class="category-badge">No categories yet</span>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Create Quiz CTA -->
+    <mat-card class="stat-card cta-card" matRipple routerLink="/quizzes/create">
+      <mat-card-content>
+        <div class="stat-icon create">
+          <mat-icon>add_circle_outline</mat-icon>
+        </div>
+        <div class="stat-body">
+          <p class="stat-label">Ready to go?</p>
+          <p class="stat-value">New Quiz</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button color="accent" routerLink="/quizzes/create">Get Started →</button>
+      </mat-card-actions>
+    </mat-card>
+
+  </section>
+
+  <!-- ── Microservices Architecture Overview ──────────────────────────────── -->
+  <section class="architecture-section">
+    <h2>Microservices Architecture</h2>
+    <p class="arch-subtitle">This Angular app communicates exclusively through the API Gateway</p>
+
+    <div class="services-grid">
+
+      <mat-card class="service-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="svc-icon registry">device_hub</mat-icon>
+          <mat-card-title>Service Registry</mat-card-title>
+          <mat-card-subtitle>Port 8761 — Eureka Server</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Netflix Eureka discovery server. All microservices register here on startup. Start this first.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="service-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="svc-icon gateway">router</mat-icon>
+          <mat-card-title>API Gateway</mat-card-title>
+          <mat-card-subtitle>Port 8765 — Spring Cloud Gateway</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Single entry point for Angular. Routes <code>/question-service/**</code> and <code>/quiz-service/**</code> via Eureka.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="service-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="svc-icon questions">help</mat-icon>
+          <mat-card-title>Question Service</mat-card-title>
+          <mat-card-subtitle>Port 8080 — MySQL: quizapp</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Stores questions and categories. Scores answers. Exposes 6 REST endpoints.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="service-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar class="svc-icon quiz">assignment</mat-icon>
+          <mat-card-title>Quiz Service</mat-card-title>
+          <mat-card-subtitle>Port 8090 — MySQL: quizdb</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Manages quiz lifecycle. Uses OpenFeign to call Question Service for random questions.</p>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </section>
+</div>

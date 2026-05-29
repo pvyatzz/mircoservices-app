@@ -1,0 +1,108 @@
+<div class="take-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/quizzes/create" matTooltip="Create a Quiz">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1>Take a Quiz</h1>
+      <p class="subtitle">Enter a Quiz ID to load your questions</p>
+    </div>
+  </div>
+
+  <!-- ── Phase 1: Quiz ID Entry ─────────────────────────────────────────── -->
+  <mat-card *ngIf="!questionsLoaded" class="id-card">
+    <mat-card-header>
+      <mat-icon mat-card-avatar class="card-icon">play_circle_outline</mat-icon>
+      <mat-card-title>Load Quiz</mat-card-title>
+      <mat-card-subtitle>Enter the Quiz ID assigned by the database</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="idForm" (ngSubmit)="loadQuiz()">
+        <mat-form-field appearance="outline" class="id-field">
+          <mat-label>Quiz ID</mat-label>
+          <input matInput type="number" formControlName="quizId" placeholder="e.g. 1" />
+          <mat-icon matSuffix>tag</mat-icon>
+          <mat-hint>
+            <!-- Backend returns "Success" not the ID — user must look it up -->
+            IDs are auto-assigned. Check the quiz table in your MySQL quizdb database.
+          </mat-hint>
+          <mat-error *ngIf="idForm.get('quizId')?.hasError('required')">Quiz ID is required</mat-error>
+          <mat-error *ngIf="idForm.get('quizId')?.hasError('min')">Must be a positive number</mat-error>
+        </mat-form-field>
+
+        <div class="load-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="idForm.invalid">
+            <mat-icon>search</mat-icon> Load Questions
+          </button>
+          <button mat-stroked-button type="button" routerLink="/quizzes/create">
+            Create a Quiz first
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- ── Phase 2: Question Stepper ─────────────────────────────────────── -->
+  <div *ngIf="questionsLoaded" class="stepper-section">
+
+    <!-- Progress bar -->
+    <div class="progress-row">
+      <span class="progress-text">{{ answeredCount }} / {{ questions.length }} answered</span>
+      <mat-progress-bar mode="determinate"
+        [value]="(answeredCount / questions.length) * 100"
+        color="accent">
+      </mat-progress-bar>
+    </div>
+
+    <!-- One question per step; linear forces completion before advancing -->
+    <mat-stepper linear orientation="vertical">
+      <mat-step
+        *ngFor="let q of questions; let i = index"
+        [completed]="isAnswered(q.id)"
+        [label]="'Question ' + (i + 1) + ' of ' + questions.length">
+
+        <div class="question-card">
+          <p class="question-text">{{ q.questionTitle }}</p>
+
+          <!-- Radio group — one option per button -->
+          <mat-radio-group class="options-group"
+            [value]="answers[q.id]"
+            (change)="selectAnswer(q.id, $event.value)">
+
+            <mat-radio-button class="option-btn" [value]="q.option1">
+              <span class="opt-label">A</span> {{ q.option1 }}
+            </mat-radio-button>
+            <mat-radio-button class="option-btn" [value]="q.option2">
+              <span class="opt-label">B</span> {{ q.option2 }}
+            </mat-radio-button>
+            <mat-radio-button class="option-btn" [value]="q.option3">
+              <span class="opt-label">C</span> {{ q.option3 }}
+            </mat-radio-button>
+            <mat-radio-button class="option-btn" [value]="q.option4">
+              <span class="opt-label">D</span> {{ q.option4 }}
+            </mat-radio-button>
+          </mat-radio-group>
+
+          <div class="step-actions">
+            <button mat-button matStepperPrevious *ngIf="i > 0">
+              <mat-icon>chevron_left</mat-icon> Previous
+            </button>
+            <button mat-raised-button color="primary" matStepperNext
+              *ngIf="i < questions.length - 1"
+              [disabled]="!isAnswered(q.id)">
+              Next <mat-icon>chevron_right</mat-icon>
+            </button>
+            <!-- Submit button only on the last step -->
+            <button mat-raised-button color="accent"
+              *ngIf="i === questions.length - 1"
+              [disabled]="answeredCount < questions.length"
+              (click)="submitQuiz()">
+              <mat-icon>send</mat-icon> Submit Quiz
+            </button>
+          </div>
+        </div>
+
+      </mat-step>
+    </mat-stepper>
+  </div>
+</div>

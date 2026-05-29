@@ -1,0 +1,16 @@
+<!-- Root app shell: fixed navbar + scrollable content area + global spinner overlay -->
+<div class="app-shell">
+
+  <!-- Fixed top navigation bar (NavbarComponent from SharedModule) -->
+  <app-navbar></app-navbar>
+
+  <!-- Main content � offset by 64px for the fixed toolbar -->
+  <main class="content" role="main">
+    <!-- Active feature module renders here (lazy loaded by the router) -->
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Full-page loading overlay � appears during every HTTP request via LoadingInterceptor -->
+  <app-loading-spinner></app-loading-spinner>
+
+</div>

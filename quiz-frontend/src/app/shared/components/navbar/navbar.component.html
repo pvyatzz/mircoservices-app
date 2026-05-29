@@ -1,0 +1,27 @@
+<mat-toolbar color="primary" class="navbar">
+  <!-- Brand / Logo -->
+  <a class="brand" routerLink="/">
+    <mat-icon>quiz</mat-icon>
+    <span>QuizApp</span>
+  </a>
+
+  <span class="spacer"></span>
+
+  <!-- Navigation links -->
+  <nav class="nav-links">
+    <a mat-button routerLink="/"
+       routerLinkActive="active-link"
+       [routerLinkActiveOptions]="{exact: true}">
+      <mat-icon>dashboard</mat-icon> Dashboard
+    </a>
+    <a mat-button routerLink="/questions" routerLinkActive="active-link">
+      <mat-icon>help_outline</mat-icon> Questions
+    </a>
+    <a mat-button routerLink="/quizzes/create" routerLinkActive="active-link">
+      <mat-icon>add_circle_outline</mat-icon> New Quiz
+    </a>
+    <a mat-button routerLink="/quizzes/take" routerLinkActive="active-link">
+      <mat-icon>play_circle_outline</mat-icon> Take Quiz
+    </a>
+  </nav>
+</mat-toolbar>

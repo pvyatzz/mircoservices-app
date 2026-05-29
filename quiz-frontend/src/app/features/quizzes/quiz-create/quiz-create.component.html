@@ -1,0 +1,92 @@
+<div class="create-container">
+  <div class="page-header">
+    <button mat-icon-button routerLink="/" matTooltip="Back to Dashboard">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1>Create a Quiz</h1>
+      <p class="subtitle">Pick a category and the Quiz Service will randomly select questions</p>
+    </div>
+  </div>
+
+  <div class="create-layout">
+
+    <!-- Form card -->
+    <mat-card class="form-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon">add_circle_outline</mat-icon>
+        <mat-card-title>Quiz Details</mat-card-title>
+        <mat-card-subtitle>All fields are required</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="quizForm" (ngSubmit)="onSubmit()">
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Quiz Title</mat-label>
+            <input matInput formControlName="title" placeholder="e.g. Java Basics Quiz" />
+            <mat-icon matSuffix>title</mat-icon>
+            <mat-error *ngIf="f['title'].hasError('required')">Title is required</mat-error>
+            <mat-error *ngIf="f['title'].hasError('minlength')">Minimum 3 characters</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="categoryName">
+              <mat-option *ngFor="let cat of categories" [value]="cat">{{ cat }}</mat-option>
+            </mat-select>
+            <mat-hint *ngIf="categories.length === 0">Loading categories…</mat-hint>
+            <mat-error *ngIf="f['categoryName'].hasError('required')">Category is required</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Number of Questions</mat-label>
+            <input matInput type="number" formControlName="numQuestions" min="1" max="20" />
+            <mat-hint>Between 1 and 20</mat-hint>
+            <mat-error *ngIf="f['numQuestions'].hasError('required')">Required</mat-error>
+            <mat-error *ngIf="f['numQuestions'].hasError('min')">Minimum 1</mat-error>
+            <mat-error *ngIf="f['numQuestions'].hasError('max')">Maximum 20</mat-error>
+          </mat-form-field>
+
+          <mat-divider></mat-divider>
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" routerLink="/">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="quizForm.invalid">
+              <mat-icon>rocket_launch</mat-icon> Create Quiz
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- How it works -->
+    <mat-card class="info-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar class="card-icon info">info</mat-icon>
+        <mat-card-title>How it works</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="step-list">
+          <div class="step">
+            <span class="step-num">1</span>
+            <p>Quiz Service calls Question Service via <strong>OpenFeign</strong> to randomly pick questions from your category</p>
+          </div>
+          <div class="step">
+            <span class="step-num">2</span>
+            <p>The quiz is saved in <code>quizdb</code> with the selected question IDs</p>
+          </div>
+          <div class="step">
+            <span class="step-num">3</span>
+            <p>Note your Quiz ID (check your database) and enter it on the Take Quiz page</p>
+          </div>
+          <div class="step">
+            <span class="step-num">4</span>
+            <p>Submit your answers to receive an instant score</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

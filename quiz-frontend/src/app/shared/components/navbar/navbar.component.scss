@@ -1,0 +1,49 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+  }
+}
+
+.spacer { flex: 1 1 auto; }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 4px;
+    opacity: 0.85;
+    transition: opacity 0.2s, background 0.2s;
+
+    &:hover { opacity: 1; }
+
+    &.active-link {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.18);
+    }
+  }
+}

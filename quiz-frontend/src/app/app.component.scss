@@ -1,0 +1,13 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  /* Offset for the fixed Material toolbar (64px height) */
+  margin-top: 64px;
+  flex: 1;
+  background: #f5f5f5;
+  min-height: calc(100vh - 64px);
+}

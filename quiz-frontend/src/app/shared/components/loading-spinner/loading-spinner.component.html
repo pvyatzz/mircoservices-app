@@ -1,0 +1,8 @@
+<!-- Overlay is shown only while LoadingInterceptor signals an active HTTP request -->
+<div class="overlay" *ngIf="loadingService.loading$ | async">
+  <mat-progress-spinner
+    mode="indeterminate"
+    color="accent"
+    diameter="60">
+  </mat-progress-spinner>
+</div>

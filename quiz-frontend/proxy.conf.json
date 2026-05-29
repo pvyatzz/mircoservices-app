@@ -1,0 +1,16 @@
+{
+  "/question-service": {
+    "target": "http://localhost:8765",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "comment": "Proxies /question-service/** to the Spring Cloud API Gateway during development"
+  },
+  "/quiz-service": {
+    "target": "http://localhost:8765",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "comment": "Proxies /quiz-service/** to the Spring Cloud API Gateway during development"
+  }
+}

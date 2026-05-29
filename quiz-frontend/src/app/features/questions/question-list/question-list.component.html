@@ -1,0 +1,96 @@
+<div class="list-container">
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <h1>Questions</h1>
+      <p class="subtitle">Browse, search and manage all quiz questions</p>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/questions/add">
+      <mat-icon>add</mat-icon> Add Question
+    </button>
+  </div>
+
+  <!-- Category filter chips -->
+  <div class="filter-section">
+    <span class="filter-label">Filter by category:</span>
+    <div class="chip-row">
+      <span class="filter-chip" [class.active]="selectedCategory === null"
+            (click)="filterByCategory(null)">All</span>
+      <span *ngFor="let cat of categories"
+            class="filter-chip" [class.active]="selectedCategory === cat"
+            (click)="filterByCategory(cat)">{{ cat }}</span>
+    </div>
+  </div>
+
+  <!-- Table card -->
+  <mat-card class="table-card">
+    <mat-card-header>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search questions</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input matInput placeholder="Type to filter..." (input)="applySearch($event)" />
+      </mat-form-field>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="table-wrapper">
+        <table mat-table [dataSource]="dataSource" matSort class="questions-table">
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
+            <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+          </ng-container>
+
+          <!-- Question Text Column -->
+          <ng-container matColumnDef="questionTitle">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Question</th>
+            <td mat-cell *matCellDef="let row" class="question-cell">{{ row.questionTitle }}</td>
+          </ng-container>
+
+          <!-- Category Column -->
+          <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Category</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="category-badge">{{ row.category }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Difficulty Column -->
+          <ng-container matColumnDef="difficultylevel">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Difficulty</th>
+            <td mat-cell *matCellDef="let row">
+              <span class="difficulty-badge" [ngClass]="difficultyClass(row.difficultylevel)">
+                {{ row.difficultylevel }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Options preview (info tooltip) -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Options</th>
+            <td mat-cell *matCellDef="let row">
+              <button mat-icon-button color="primary"
+                [matTooltip]="'A: ' + row.option1 + ' | B: ' + row.option2 + ' | C: ' + row.option3 + ' | D: ' + row.option4">
+                <mat-icon>info_outline</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+
+          <!-- Empty state -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell no-data" [attr.colspan]="displayedColumns.length">
+              <mat-icon>search_off</mat-icon>
+              <p>No questions found.</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,63 @@
+<div class="result-container">
+  <mat-card class="result-card">
+
+    <!-- Score display -->
+    <div class="score-section">
+      <div class="score-emoji">{{ grade.emoji }}</div>
+      <h1 class="grade-label" [style.color]="grade.color">{{ grade.label }}</h1>
+
+      <div class="score-display">
+        <span class="score-num">{{ score }}</span>
+        <span class="score-sep">/</span>
+        <span class="score-total">{{ total }}</span>
+      </div>
+      <p class="score-pct">{{ percentage }}% correct</p>
+    </div>
+
+    <!-- Percentage progress bar -->
+    <div class="progress-section">
+      <mat-progress-bar
+        mode="determinate"
+        [value]="percentage"
+        [color]="percentage >= 60 ? 'primary' : 'warn'">
+      </mat-progress-bar>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Stat breakdown -->
+    <div class="stats-row">
+      <div class="stat">
+        <mat-icon class="stat-icon correct">check_circle</mat-icon>
+        <p class="stat-value">{{ score }}</p>
+        <p class="stat-label">Correct</p>
+      </div>
+      <div class="stat">
+        <mat-icon class="stat-icon wrong">cancel</mat-icon>
+        <p class="stat-value">{{ total - score }}</p>
+        <p class="stat-label">Wrong</p>
+      </div>
+      <div class="stat">
+        <mat-icon class="stat-icon total">quiz</mat-icon>
+        <p class="stat-value">{{ total }}</p>
+        <p class="stat-label">Total</p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Action buttons -->
+    <div class="result-actions">
+      <button mat-stroked-button routerLink="/">
+        <mat-icon>home</mat-icon> Home
+      </button>
+      <button mat-raised-button color="primary" routerLink="/quizzes/create">
+        <mat-icon>add_circle</mat-icon> New Quiz
+      </button>
+      <button mat-raised-button color="accent" routerLink="/quizzes/take">
+        <mat-icon>replay</mat-icon> Take Again
+      </button>
+    </div>
+
+  </mat-card>
+</div>
