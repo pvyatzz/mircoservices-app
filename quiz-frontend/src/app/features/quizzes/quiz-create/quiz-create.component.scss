@@ -77,3 +77,40 @@ mat-divider { margin: 12px 0 16px; }
     }
   }
 }
+
+.success-card {
+  margin-top: 24px;
+  border-radius: 12px !important;
+  border-left: 5px solid #4caf50 !important;
+  box-shadow: 0 2px 12px rgba(76, 175, 80, 0.2) !important;
+}
+
+.success-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.success-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #4caf50;
+}
+
+.success-text {
+  flex: 1;
+  h3 { margin: 0 0 4px; font-size: 1.1rem; color: #2e7d32; }
+  p  { margin: 2px 0; color: #555; font-size: 0.9rem; }
+  .id-hint { font-size: 0.8rem; color: #888; }
+}
+
+.quiz-id-badge {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #3f51b5;
+  background: #e8eaf6;
+  padding: 2px 12px;
+  border-radius: 8px;
+}

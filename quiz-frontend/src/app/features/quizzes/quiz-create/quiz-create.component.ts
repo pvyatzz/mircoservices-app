@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { QuizService } from '../../../core/services/quiz.service';
 import { QuestionService } from '../../../core/services/question.service';
@@ -10,10 +10,7 @@ import { QuestionService } from '../../../core/services/question.service';
  * Categories are fetched from the Question Service (cached in QuestionService).
  *
  * API: POST /quiz-service/quiz/create  (body: QuizDto)
- *
- * ⚠️  Backend limitation: the response is the string "Success" — not the quiz ID.
- *     After creation the user is redirected to "Take Quiz" to enter the ID manually.
- *     TODO: Ask the backend team to return the created entity ID.
+ * Response: quiz ID as plain string (e.g. "3")
  */
 @Component({
   selector: 'app-quiz-create',
@@ -23,12 +20,12 @@ import { QuestionService } from '../../../core/services/question.service';
 export class QuizCreateComponent implements OnInit {
   quizForm!: FormGroup;
   categories: string[] = [];
+  createdQuizId: number | null = null;
 
   constructor(
     private fb: FormBuilder,
     private quizService: QuizService,
     private questionService: QuestionService,
-    private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
@@ -51,20 +48,19 @@ export class QuizCreateComponent implements OnInit {
     if (this.quizForm.invalid) return;
 
     this.quizService.createQuiz(this.quizForm.value).subscribe({
-      next: () => {
+      next: (idStr) => {
+        this.createdQuizId = +idStr;
         this.snackBar.open(
-          'Quiz created! Enter the quiz ID on the next page to start.',
+          `Quiz created! Your Quiz ID is ${this.createdQuizId}.`,
           'Got it',
           { duration: 6000 }
         );
-        this.router.navigate(['/quizzes/take']);
       },
-      error: () => {
-        this.snackBar.open(
-          'Failed to create quiz. Check that all services are running.',
-          'Close',
-          { duration: 4000, panelClass: 'snack-error' }
-        );
+      error: (err: HttpErrorResponse) => {
+        const msg = err.status === 0
+          ? 'Cannot reach the server. Make sure all services are running (Service Registry → API Gateway → Question Service → Quiz Service).'
+          : `Failed to create quiz (error ${err.status}). Check that all services are running.`;
+        this.snackBar.open(msg, 'Close', { duration: 6000, panelClass: 'snack-error' });
       }
     });
   }

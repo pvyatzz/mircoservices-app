@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
 import { QuizService } from '../../../core/services/quiz.service';
 import { QuestionWrapper, QuizResponse } from '../../questions/models/question.model';
 
@@ -62,8 +63,13 @@ export class QuizTakeComponent implements OnInit {
         this.questions = questions;
         this.questionsLoaded = true;
       },
-      error: () => {
-        this.snackBar.open('Quiz not found. Check the ID and try again.', 'Close', { duration: 3000 });
+      error: (err: HttpErrorResponse) => {
+        const msg = err.status === 404
+          ? `No quiz found with ID ${this.quizId}. Check the ID or create a new quiz.`
+          : err.status === 0
+          ? 'Cannot reach the server. Make sure all services are running (Service Registry → API Gateway → Question Service → Quiz Service).'
+          : `Failed to load quiz (error ${err.status}). Make sure all services are running.`;
+        this.snackBar.open(msg, 'Close', { duration: 6000 });
       }
     });
   }

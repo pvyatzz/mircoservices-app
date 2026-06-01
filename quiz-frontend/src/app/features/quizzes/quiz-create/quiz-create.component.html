@@ -78,7 +78,7 @@
           </div>
           <div class="step">
             <span class="step-num">3</span>
-            <p>Note your Quiz ID (check your database) and enter it on the Take Quiz page</p>
+            <p>Your Quiz ID will appear on this page after creation — copy it for the Take Quiz page</p>
           </div>
           <div class="step">
             <span class="step-num">4</span>
@@ -89,4 +89,20 @@
     </mat-card>
 
   </div>
+
+  <!-- ── Success Banner (shown after quiz is created) ─────────────────────── -->
+  <mat-card *ngIf="createdQuizId" class="success-card">
+    <mat-card-content class="success-content">
+      <mat-icon class="success-icon">check_circle</mat-icon>
+      <div class="success-text">
+        <h3>Quiz Created Successfully!</h3>
+        <p>Your Quiz ID is <strong class="quiz-id-badge">{{ createdQuizId }}</strong></p>
+        <p class="id-hint">Copy this ID and use it on the Take Quiz page.</p>
+      </div>
+      <button mat-raised-button color="primary" routerLink="/quizzes/take">
+        <mat-icon>play_arrow</mat-icon> Take This Quiz
+      </button>
+    </mat-card-content>
+  </mat-card>
+
 </div>
