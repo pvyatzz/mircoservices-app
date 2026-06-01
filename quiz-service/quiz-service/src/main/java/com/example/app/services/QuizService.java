@@ -33,20 +33,25 @@ public class QuizService {
             Quiz quiz = new Quiz();
             quiz.setTitle(title);
             quiz.setQuestionIds(questions);
-            quizDao.save(quiz);
+            Quiz saved = quizDao.save(quiz);
 
-            return new ResponseEntity<>("Success", HttpStatus.CREATED);
+            return new ResponseEntity<>(String.valueOf(saved.getId()), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error creating quiz: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(Integer id) {
-        Quiz quiz = quizDao.findById(id).get();
-        List<Integer> questionIds = quiz.getQuestionIds();
-        ResponseEntity<List<QuestionWrapper>> questions = quizInterface.getQuestionsFromId(questionIds);
-        return questions;
-
+        try {
+            Quiz quiz = quizDao.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Quiz not found with id: " + id));
+            List<Integer> questionIds = quiz.getQuestionIds();
+            return quizInterface.getQuestionsFromId(questionIds);
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses) {

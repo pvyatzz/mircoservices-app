@@ -34,6 +34,14 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-gateway-server-webmvc</artifactId>
+			<exclusions>
+				<!-- httpclient5 does not support chunked transfer encoding on responses.
+				     Excluding it forces Spring to use the JDK built-in HTTP client instead. -->
+				<exclusion>
+					<groupId>org.apache.httpcomponents.client5</groupId>
+					<artifactId>httpclient5</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
